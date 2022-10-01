@@ -1,0 +1,43 @@
+{
+  "path": {
+    "events": {
+      "message": "/app/events/message",
+      "callback_query": "/app/events/callback_query"
+    },
+    "log": "/log/stream.log",
+    "query": "/log/query.json",
+    "configs": "/app/config"
+  },
+  "commands": {
+    "message": [
+      {
+        "command": "/start",
+        "description": "Welcome message!"
+      },
+      {
+        "command": "/test",
+        "description": "Test message!"
+      }
+    ],
+    "callback_query": [
+      {
+        "command": "/test"
+      }
+    ]
+  },
+  "loadedFiles": [],
+  "log": [],
+
+  "excludeDays": [
+    "Sat",
+    "Sun"
+  ],
+
+  "image": {
+  },
+
+  "usersTemporary": {
+  },
+  "users": {},
+  "quotes": {}
+}

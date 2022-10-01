@@ -1,0 +1,87 @@
+{
+  "debug": {
+    "state": true,
+    "userID": 1194247671,
+    "chatID": 1194247671
+  },
+  "botName": "",
+  "token": "",
+  "api_keys": {
+  },
+  "db": {
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": ""
+  },
+  "db_mongo": "",
+  "image": {
+    "welcome": "https://chicagosocial.com/wp-content/uploads/2018/04/shutterstock_664897480.jpg",
+    "main": "https://cloud.mail.ru/public/jyxz/t7ojQXUaj",
+    "start": "https://cloud.mail.ru/public/SUax/XHAMk9Eeu"
+  },
+  "notification": {
+    "timeBefore": 2,
+    "interval": 1000,
+    "list": {
+      "gameTime": {
+        "enabled": true,
+        "method": "gameNotification",
+        "time": [
+          "17:23:57"
+        ],
+        "excludeDays": [
+          "Sat",
+          "Sun"
+        ]
+      },
+      "dailyTimes": {
+        "enabled": false,
+        "method": "dailyNotification",
+        "time": [
+          "13:30:00",
+          "15:30:00"
+        ],
+        "excludeDays": [
+          "Sat",
+          "Sun"
+        ]
+      },
+      "dayEvent": {
+        "enabled": true,
+        "method": "dayEvent",
+        "time": [
+          "10:00:00"
+        ],
+        "excludeDays": []
+      }
+    }
+  },
+  "users": {},
+  "usersTemporary": {},
+  "commands": {
+    "message": [
+      {
+        "command": "/start",
+        "description": "Welcome message!"
+      },
+      {
+        "command": "/register",
+        "description": "Участвовать в игре!"
+      },
+      {
+        "command": "/unregister",
+        "description": "Прекратить участие в игре совсем!"
+      },
+      {
+        "command": "/game_members",
+        "description": "Участники игры!"
+      }
+    ],
+    "callback_query": [
+      {
+        "command": "/register"
+      }
+    ]
+  }
+}

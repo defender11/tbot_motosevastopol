@@ -1,0 +1,13 @@
+### Example user template template
+### Example user template
+
+node_modules
+node_modules/*
+package-lock.json
+app/config/config.json
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
