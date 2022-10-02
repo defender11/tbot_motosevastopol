@@ -1,12 +1,10 @@
 const Storage = require('../../../system/storage/storage.js');
 let storage = Storage.getInstance();
-const Log = require('../../../system/helper/log');
 const moment = require('moment');
 const debug = require("../../../system/helper/debug");
 const botEvents = require("../../../system/events/botEvents");
 const Time = require('../../helper/time');
 const axios = require("axios");
-const UsersModel = require("../../../system/model/database/users");
 
 const notifications = {
   async execute(params) {
@@ -23,8 +21,8 @@ const notifications = {
 
           if (time === params.currentTime) {
 
-            let users = await UsersModel.find.getBy('list'),
-              chatID = '-648467274';
+            let users = [],
+              chatID = storage.get('group_id');
 
             if (debug.enabled()) {
               users = {};
@@ -43,83 +41,54 @@ const notifications = {
     }
   },
 
-  gameNotification({time, users, chatID}) {
-    let usersListNotification = '',
-      type = 'photo',
-      data = '',
-      caption = '';
+  dayEventHoliday({chatID}) {
+    let text = `Праздники на сегодня`,
+      options = {
+        caption: text
+      };
 
-    if (Object.keys(users).length) {
-      for (let user in users) {
-        usersListNotification += '@' + users[user].username + ' ';
-      }
-    }
-
-    data = storage.get('image').start;
-    caption = usersListNotification + "\n-------\n" + time + ' ! ';
-
-    if (data !== '' && caption !== '') {
-      if (Object.keys(users).length) {
-        for (let user in users) {
-          Log.add('Notification', users[user]);
-        }
-      }
-
-      botEvents.sendEvent(type, {
-        id: chatID,
-        data: data,
-        options: {
-          caption: caption
-        }
-      });
-    }
-  },
-
-  dailyNotification({chatID}) {
-    const quotes = storage.get('quotes');
-    const quotesList = [];
-
-    for (let quote in quotes) {
-      quotesList.push(...quotes[quote]);
-    }
-
-    const number = Math.floor(Math.random() * quotesList.length);
-
-    let quoteCurrent = quotesList[number];
-
-    let parameters = {
-      id: chatID
-    }
-
-    let author = (quoteCurrent.author || '');
-    let text = (quoteCurrent.text || '');
-
-    if (quoteCurrent.type === 'photo') {
-      parameters.data = author;
-      parameters.options = {};
-      parameters.options.caption = text;
-    }
-
-    if (quoteCurrent.type === 'text') {
-      parameters.data = author + "\n--------------\n" + text;
-    }
-
-    botEvents.sendEvent(quoteCurrent.type, parameters);
-  },
-
-  dayEvent({chatID}) {
     axios.get('https://www.calend.ru/img/export/informer.png', {
       responseType: 'arraybuffer'
     }).then(response => {
       const buffer = Buffer.from(response.data, 'base64');
 
-      botEvents.sendEvent('photo', {
-        id: chatID,
-        data: buffer,
-        options: {
-          caption: ''
-        }
+      botEvents.sendEvent('photo',
+        {
+          id: chatID,
+          data: buffer,
+          options: options
+        },
+        {
+          message: 'Info Holy Day',
+          data: 'Info Holy Day',
+        });
+    })
+      .catch(ex => {
+        console.error(ex);
       });
+  },
+
+  dayEventWeather({chatID}) {
+    let text = `Севастополь, погода на сегодня и завтра`,
+      options = {
+        caption: text
+      };
+
+    axios.get('https://wttr.in/sevastopol.png?p&q&d2&lang=ru&time=' + moment().format('HHmmss'), {
+      responseType: 'arraybuffer'
+    }).then(response => {
+      const buffer = Buffer.from(response.data, 'base64');
+
+      botEvents.sendEvent('photo',
+        {
+          id: chatID,
+          data: buffer,
+          options: options
+        },
+        {
+          message: 'Info Weather Day',
+          data: 'Info Weather Day',
+        });
     })
       .catch(ex => {
         console.error(ex);
@@ -142,5 +111,7 @@ module.exports = {
       notifications.execute(params);
 
     }, storage.get('notification').interval);
-  }
+  },
+
+  notifications
 }
