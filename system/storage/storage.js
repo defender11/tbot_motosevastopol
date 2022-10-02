@@ -35,14 +35,13 @@ const Storage = (function () {
     }
 
     async initManual() {
-
-      const UsersModel = require('./../model/database/users');
-
-      const usersList = await UsersModel.find.getBy('list');
-
-      for (let user in usersList) {
-        this.set('users', new Entinity(usersList[user]), true, user);
-      }
+      // const UsersModel = require('./../model/database/users');
+      //
+      // const usersList = await UsersModel.find.getBy('list');
+      //
+      // for (let user in usersList) {
+      //   this.set('users', new Entinity(usersList[user]), true, user);
+      // }
     }
 
     setList(list = []) {

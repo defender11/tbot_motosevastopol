@@ -3,12 +3,13 @@ let storage = Storage.getInstance();
 const botEvents = require("../../../system/events/botEvents");
 
 module.exports.execute = async function (bot, msg) {
-  let image = storage.get('image').motosevastopol_avatar,
+  let image = storage.get('image').info_moto_service,
+    text = storage.get('messages_list').info_moto_service,
     options = {
-      caption: storage.get('messages_list').chat_rules
+      caption: text
     };
 
-  msg['_' + storage.get('botName') + '_start'] = storage.get('messages_list').chat_rules;
+  msg['_' + storage.get('botName') + '_info_moto_service'] = text;
 
   return await botEvents.sendEvent('photo',
     {
@@ -17,7 +18,7 @@ module.exports.execute = async function (bot, msg) {
       options: options
     },
     {
-      message: 'Start',
+      message: 'Info Moto Service',
       data: msg,
     });
 }

@@ -1,11 +1,12 @@
 {
   "debug": {
-    "state": true,
+    "state": false,
     "userID": 1194247671,
     "chatID": 1194247671
   },
   "botName": "",
   "token": "",
+  "group_id": "",
   "api_keys": {
   },
   "db": {
@@ -16,42 +17,27 @@
   },
   "db_mongo": "",
   "image": {
-    "welcome": "https://chicagosocial.com/wp-content/uploads/2018/04/shutterstock_664897480.jpg",
-    "main": "https://cloud.mail.ru/public/jyxz/t7ojQXUaj",
-    "start": "https://cloud.mail.ru/public/SUax/XHAMk9Eeu"
+    "info_moto_service": "https://cloud.mail.ru/public/NZzC/y6wh8241i",
+    "motosevastopol_avatar": "https://cloud.mail.ru/public/vG2n/KGqE9cnva",
+    "motohelp": "https://cloud.mail.ru/public/aPHz/qQJwgw4df"
   },
   "notification": {
     "timeBefore": 2,
     "interval": 1000,
     "list": {
-      "gameTime": {
+      "dayEventHoliday": {
         "enabled": true,
-        "method": "gameNotification",
+        "method": "dayEventHoliday",
         "time": [
-          "17:23:57"
+          "08:00:00"
         ],
-        "excludeDays": [
-          "Sat",
-          "Sun"
-        ]
+        "excludeDays": []
       },
-      "dailyTimes": {
-        "enabled": false,
-        "method": "dailyNotification",
-        "time": [
-          "13:30:00",
-          "15:30:00"
-        ],
-        "excludeDays": [
-          "Sat",
-          "Sun"
-        ]
-      },
-      "dayEvent": {
+      "dayEventWeather": {
         "enabled": true,
-        "method": "dayEvent",
+        "method": "dayEventWeather",
         "time": [
-          "10:00:00"
+          "08:00:00"
         ],
         "excludeDays": []
       }
@@ -62,26 +48,34 @@
   "commands": {
     "message": [
       {
+        "command": "/chat_rules",
+        "description": "Правила чата"
+      },
+      {
+        "command": "/phones_help",
+        "description": "Телефоны помощи"
+      },
+      {
+        "command": "/info_moto_service",
+        "description": "Мото Сервис"
+      },
+      {
+        "command": "/info_moto_help",
+        "description": "Чат Мото Помощи"
+      },
+      {
+        "command": "/holidays_day",
+        "description": "Праздники дня"
+      },
+      {
+        "command": "/weather_day",
+        "description": "Погода Севастополь"
+      },
+      {
         "command": "/start",
-        "description": "Welcome message!"
-      },
-      {
-        "command": "/register",
-        "description": "Участвовать в игре!"
-      },
-      {
-        "command": "/unregister",
-        "description": "Прекратить участие в игре совсем!"
-      },
-      {
-        "command": "/game_members",
-        "description": "Участники игры!"
+        "description": "Приветствие"
       }
     ],
-    "callback_query": [
-      {
-        "command": "/register"
-      }
-    ]
+    "callback_query": []
   }
 }
