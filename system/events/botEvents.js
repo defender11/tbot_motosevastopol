@@ -25,6 +25,8 @@ module.exports = {
         return await bot.sendSticker(id, data, options, fileOptions);
       case "photo":
         return await bot.sendPhoto(id, data, options);
+      case "mediaGroup":
+        return await bot.sendMediaGroup(id, data, options);
       default:
         return await bot.sendMessage(id, data, options);
     }

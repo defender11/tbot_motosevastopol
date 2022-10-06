@@ -3,8 +3,8 @@ let storage = Storage.getInstance();
 const moment = require('moment');
 const debug = require("../../../system/helper/debug");
 const botEvents = require("../../../system/events/botEvents");
-const Time = require('../../helper/time');
 const axios = require("axios");
+const puppeteer = require('puppeteer');
 
 const notifications = {
   async execute(params) {
@@ -41,11 +41,18 @@ const notifications = {
     }
   },
 
-  dayEventHoliday({chatID}) {
-    let text = `Праздники на сегодня`,
+  async dayEventHoliday({chatID}) {
+    let text = `✅ Праздники на сегодня`,
       options = {
         caption: text
       };
+
+    await botEvents.sendEvent('message',
+      {
+        id: chatID,
+        data: '⏱ Получаем данные по праздникам...',
+        options: {}
+      });
 
     axios.get('https://www.calend.ru/img/export/informer.png', {
       responseType: 'arraybuffer'
@@ -68,32 +75,118 @@ const notifications = {
       });
   },
 
-  dayEventWeather({chatID}) {
-    let text = `Севастополь, погода на сегодня и завтра`,
+  async dayEventWeather({chatID}) {
+    let text = '',
       options = {
         caption: text
       };
 
-    axios.get('https://wttr.in/sevastopol.png?p&q&d2&lang=ru&time=' + moment().format('HHmmss'), {
-      responseType: 'arraybuffer'
-    }).then(response => {
-      const buffer = Buffer.from(response.data, 'base64');
+    // WEATHER YANDEX
+    await botEvents.sendEvent('message',
+      {
+        id: chatID,
+        data: '⏱ Получаем погодные данные...',
+        options: {}
+      });
 
-      botEvents.sendEvent('photo',
-        {
-          id: chatID,
-          data: buffer,
-          options: options
-        },
-        {
-          message: 'Info Weather Day',
-          data: 'Info Weather Day',
-        });
-    })
-      .catch(ex => {
-        console.error(ex);
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setViewport({width: 1280, height: 800});
+    await page.goto('https://yandex.ru/pogoda/?lat=44.61649704&lon=33.52513123');
+    const dayNow = await page.screenshot({
+      clip: {
+        x: 25,
+        y: 110,
+        width: 600,
+        height: 280,
+      },
+    });
+
+    const days = await page.screenshot({
+      clip: {
+        x: 135,
+        y: 540,
+        width: 635,
+        height: 200,
+      },
+    });
+
+    await browser.close();
+
+    await botEvents.sendEvent('mediaGroup',
+      {
+        id: chatID,
+        data: [
+          {type: 'photo', media: dayNow},
+          {type: 'photo', media: days},
+        ],
+        options: {}
+      },
+      {
+        message: 'Info Weather Day Yandex',
+        data: 'Info Weather Day Yandex',
+      });
+
+    await botEvents.sendEvent('message',
+      {
+        id: chatID,
+        data: '✅ Информация взята с Yandex Weather.',
+        options: {}
       });
   },
+
+  async dayEventRoad({chatID}) {
+    let text = '',
+      options = {
+        caption: text
+      };
+
+    // MAP YANDEX
+    await botEvents.sendEvent('message',
+      {
+        id: chatID,
+        data: '⏱ Получаем данные дорожной обстановки Севастополя...\n⚠ Может занят некоторое время...',
+        options: {}
+      });
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.setViewport({width: 3920, height: 3080});
+    await page.goto('https://yandex.ru/maps/959/sevastopol/?l=trf%2Ctrfe&ll=33.496600%2C44.577991&z=15.95', {
+      waitUntil: 'networkidle0',
+    })
+      .catch((err) => console.log("error loading url", err));
+
+    const map = await page.screenshot({
+      clip: {
+        x: 400,
+        y: 0,
+        width: 3420,
+        height: 3080,
+      }
+    });
+
+    await browser.close();
+
+    await botEvents.sendEvent('photo',
+      {
+        id: chatID,
+        data: map,
+        options: {}
+      },
+      {
+        message: 'Info Weather Day Yandex',
+        data: 'Info Weather Day Yandex',
+      });
+
+    await botEvents.sendEvent('message',
+      {
+        id: chatID,
+        data: '✅ Информация взята с Yandex Maps.',
+        options: {}
+      });
+  }
 }
 
 module.exports = {
