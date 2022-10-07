@@ -4,7 +4,8 @@ const moment = require('moment');
 const debug = require("../../../system/helper/debug");
 const botEvents = require("../../../system/events/botEvents");
 const axios = require("axios");
-const puppeteer = require('puppeteer');
+const WeatherYandex = require('../../helper/weatherYandex');
+const MapYandex = require('../../helper/mapYandex');
 
 const notifications = {
   async execute(params) {
@@ -93,42 +94,102 @@ const notifications = {
         });
     }
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setViewport({width: 1280, height: 800});
-    await page.goto('https://yandex.ru/pogoda/?lat=44.61649704&lon=33.52513123');
-    const dayNow = await page.screenshot({
-      clip: {
-        x: 25,
-        y: 110,
-        width: 600,
-        height: 280,
-      },
-    });
+    const weather = new WeatherYandex();
+    const weatherNow = await weather.get('now');
 
-    const days = await page.screenshot({
-      clip: {
-        x: 135,
-        y: 540,
-        width: 635,
-        height: 200,
-      },
-    });
-
-    await browser.close();
-
-    await botEvents.sendEvent('mediaGroup',
+    await botEvents.sendEvent('photo',
       {
         id: chatID,
-        data: [
-          {type: 'photo', media: dayNow},
-          {type: 'photo', media: days},
-        ],
+        data: weatherNow,
         options: {}
       },
       {
         message: 'Info Weather Day Yandex',
         data: 'Info Weather Day Yandex',
+      });
+
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '✅ Информация взята с Yandex Weather.',
+          options: {}
+        });
+    }
+  },
+
+  async sixDayEventWeather({chatID}, withInfoMessage = false) {
+    let text = '',
+      options = {
+        caption: text
+      };
+
+    // WEATHER YANDEX
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '⏱ Получаем погодные данные...',
+          options: {}
+        });
+    }
+
+    const weather = new WeatherYandex();
+    const weatherSixDays = await weather.get('sixDays');
+
+    await botEvents.sendEvent('photo',
+      {
+        id: chatID,
+        data: weatherSixDays,
+        options: {}
+      },
+      {
+        message: 'Info Weather Six Day Yandex',
+        data: 'Info Weather Six Day Yandex',
+      });
+
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '✅ Информация взята с Yandex Weather.',
+          options: {}
+        });
+    }
+  },
+
+  async groupEventWeather({chatID}, withInfoMessage = false) {
+    let text = '',
+      options = {
+        caption: text
+      };
+
+    // WEATHER YANDEX
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '⏱ Получаем погодные данные...',
+          options: {}
+        });
+    }
+
+    const weather = new WeatherYandex();
+    const weatherNow = await weather.get('now');
+    const weatherSixDays = await weather.get('sixDays');
+
+    await botEvents.sendEvent('mediaGroup',
+      {
+        id: chatID,
+        data: [
+          {type: 'photo', media: weatherNow},
+          {type: 'photo', media: weatherSixDays},
+        ],
+        options: {}
+      },
+      {
+        message: 'Info Weather Group Yandex',
+        data: 'Info Weather Group Yandex',
       });
 
     if (withInfoMessage) {
@@ -157,30 +218,17 @@ const notifications = {
         });
     }
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    await page.setViewport({width: 3920, height: 3080});
-    await page.goto('https://yandex.ru/maps/959/sevastopol/?l=trf%2Ctrfe&ll=33.496600%2C44.577991&z=15.95', {
-      waitUntil: 'networkidle0',
-    })
-      .catch((err) => console.log("error loading url", err));
-
-    const map = await page.screenshot({
-      clip: {
-        x: 400,
-        y: 0,
-        width: 3420,
-        height: 3080,
-      }
+    const map = new MapYandex({
+      width: 3920,
+      height: 3080,
     });
 
-    await browser.close();
+    const mapNow = await map.get('now');
 
     await botEvents.sendEvent('photo',
       {
         id: chatID,
-        data: map,
+        data: mapNow,
         options: {}
       },
       {

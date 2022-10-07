@@ -19,7 +19,14 @@
   "image": {
     "info_moto_service": "https://cloud.mail.ru/public/NZzC/y6wh8241i",
     "motosevastopol_avatar": "https://cloud.mail.ru/public/vG2n/KGqE9cnva",
-    "motohelp": "https://cloud.mail.ru/public/aPHz/qQJwgw4df"
+    "motohelp": "https://cloud.mail.ru/public/aPHz/qQJwgw4df",
+    "weather": "https://cloud.mail.ru/public/Xo6R/83mDNdzoT"
+  },
+  "weather": {
+    "yandex": "https://yandex.ru/pogoda/?lat=44.61649704&lon=33.52513123"
+  },
+  "maps": {
+    "yandex": "https://yandex.ru/maps/959/sevastopol/?l=trf%2Ctrfe&ll=33.496600%2C44.577991&z=15.95"
   },
   "notification": {
     "timeBefore": 2,
@@ -36,6 +43,14 @@
       "dayEventWeather": {
         "enabled": true,
         "method": "dayEventWeather",
+        "time": [
+          "14:00:00"
+        ],
+        "excludeDays": []
+      },
+      "groupEventWeather": {
+        "enabled": true,
+        "method": "groupEventWeather",
         "time": [
           "05:00:00"
         ],
@@ -90,7 +105,7 @@
         "description": "Праздники дня"
       },
       {
-        "command": "/weather_day",
+        "command": "/weather_sevastopol",
         "description": "Погода Севастополь"
       },
       {
@@ -102,6 +117,13 @@
         "description": "Приветствие"
       }
     ],
-    "callback_query": []
+    "callback_query": [
+      {
+        "command": "/cb_weather_sevastopol"
+      },
+      {
+        "command": "/cb_weather_sevastopol_six_days"
+      }
+    ]
   }
 }
