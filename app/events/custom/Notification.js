@@ -41,18 +41,20 @@ const notifications = {
     }
   },
 
-  async dayEventHoliday({chatID}) {
+  async dayEventHoliday({chatID}, withInfoMessage = false) {
     let text = `✅ Праздники на сегодня`,
       options = {
         caption: text
       };
 
-    await botEvents.sendEvent('message',
-      {
-        id: chatID,
-        data: '⏱ Получаем данные по праздникам...',
-        options: {}
-      });
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '⏱ Получаем данные по праздникам...',
+          options: {}
+        });
+    }
 
     axios.get('https://www.calend.ru/img/export/informer.png', {
       responseType: 'arraybuffer'
@@ -75,19 +77,21 @@ const notifications = {
       });
   },
 
-  async dayEventWeather({chatID}) {
+  async dayEventWeather({chatID}, withInfoMessage = false) {
     let text = '',
       options = {
         caption: text
       };
 
     // WEATHER YANDEX
-    await botEvents.sendEvent('message',
-      {
-        id: chatID,
-        data: '⏱ Получаем погодные данные...',
-        options: {}
-      });
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '⏱ Получаем погодные данные...',
+          options: {}
+        });
+    }
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -127,27 +131,31 @@ const notifications = {
         data: 'Info Weather Day Yandex',
       });
 
-    await botEvents.sendEvent('message',
-      {
-        id: chatID,
-        data: '✅ Информация взята с Yandex Weather.',
-        options: {}
-      });
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '✅ Информация взята с Yandex Weather.',
+          options: {}
+        });
+    }
   },
 
-  async dayEventRoad({chatID}) {
+  async dayEventRoad({chatID}, withInfoMessage = false) {
     let text = '',
       options = {
         caption: text
       };
 
     // MAP YANDEX
-    await botEvents.sendEvent('message',
-      {
-        id: chatID,
-        data: '⏱ Получаем данные дорожной обстановки Севастополя...\n⚠ Может занят некоторое время...',
-        options: {}
-      });
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '⏱ Получаем данные дорожной обстановки Севастополя...\n⚠ Может занят некоторое время...',
+          options: {}
+        });
+    }
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -176,16 +184,18 @@ const notifications = {
         options: {}
       },
       {
-        message: 'Info Weather Day Yandex',
-        data: 'Info Weather Day Yandex',
+        message: 'Info Event Road Sevastopol Yandex Map',
+        data: 'Info Event Road Sevastopol Yandex Map',
       });
 
-    await botEvents.sendEvent('message',
-      {
-        id: chatID,
-        data: '✅ Информация взята с Yandex Maps.',
-        options: {}
-      });
+    if (withInfoMessage) {
+      await botEvents.sendEvent('message',
+        {
+          id: chatID,
+          data: '✅ Информация взята с Yandex Maps.',
+          options: {}
+        });
+    }
   }
 }
 
