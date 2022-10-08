@@ -57,24 +57,11 @@
         "excludeDays": []
       },
       "dayEventRoad": {
-        "enabled": true,
+        "enabled": false,
         "method": "dayEventRoad",
         "time": [
           "04:00:00",
-          "04:30:00",
-          "05:00:00",
-          "05:30:00",
-          "06:00:00",
-          "06:30:00",
-          "07:00:00",
-          "10:00:00",
-          "14:00:00",
-          "14:30:00",
-          "15:00:00",
-          "15:30:00",
-          "16:00:00",
-          "16:30:00",
-          "17:00:00"
+          "16:00:00"
         ],
         "excludeDays": []
       }
@@ -107,10 +94,6 @@
       {
         "command": "/weather_sevastopol",
         "description": "Погода Севастополь"
-      },
-      {
-        "command": "/road_event_sevastopol",
-        "description": "Пробки Севастополь"
       },
       {
         "command": "/start",

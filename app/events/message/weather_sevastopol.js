@@ -3,9 +3,9 @@ let storage = Storage.getInstance();
 const botEvents = require("../../../system/events/botEvents");
 
 module.exports.execute = async function (bot, msg) {
-  let text = 'Погода Севастополь',
+  let text = '🌦 Погода Севастополь',
     options = {
-      caption: text,
+      caption: '',
       reply_markup: JSON.stringify({
         inline_keyboard: [
           [
@@ -18,10 +18,10 @@ module.exports.execute = async function (bot, msg) {
 
   msg['_' + storage.get('botName') + '_weather_sevastopol'] = text;
 
-  return await botEvents.sendEvent('photo',
+  return await botEvents.sendEvent('messages',
     {
       id: msg.chat.id,
-      data: storage.get('image').weather,
+      data: text,
       options: options
     },
     {

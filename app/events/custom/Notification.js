@@ -107,15 +107,6 @@ const notifications = {
         message: 'Info Weather Day Yandex',
         data: 'Info Weather Day Yandex',
       });
-
-    if (withInfoMessage) {
-      await botEvents.sendEvent('message',
-        {
-          id: chatID,
-          data: '✅ Информация взята с Yandex Weather.',
-          options: {}
-        });
-    }
   },
 
   async sixDayEventWeather({chatID}, withInfoMessage = false) {
@@ -147,15 +138,6 @@ const notifications = {
         message: 'Info Weather Six Day Yandex',
         data: 'Info Weather Six Day Yandex',
       });
-
-    if (withInfoMessage) {
-      await botEvents.sendEvent('message',
-        {
-          id: chatID,
-          data: '✅ Информация взята с Yandex Weather.',
-          options: {}
-        });
-    }
   },
 
   async groupEventWeather({chatID}, withInfoMessage = false) {
@@ -191,15 +173,6 @@ const notifications = {
         message: 'Info Weather Group Yandex',
         data: 'Info Weather Group Yandex',
       });
-
-    if (withInfoMessage) {
-      await botEvents.sendEvent('message',
-        {
-          id: chatID,
-          data: '✅ Информация взята с Yandex Weather.',
-          options: {}
-        });
-    }
   },
 
   async dayEventRoad({chatID}, withInfoMessage = false) {
@@ -235,15 +208,6 @@ const notifications = {
         message: 'Info Event Road Sevastopol Yandex Map',
         data: 'Info Event Road Sevastopol Yandex Map',
       });
-
-    if (withInfoMessage) {
-      await botEvents.sendEvent('message',
-        {
-          id: chatID,
-          data: '✅ Информация взята с Yandex Maps.',
-          options: {}
-        });
-    }
   }
 }
 
