@@ -1,10 +1,10 @@
-const Storage = require('../../system/storage/storage.js');
+const Storage = require('../../../system/storage/storage.js');
 let storage = Storage.getInstance();
 
-const InterfaceYandex = require("./InterfaceYandex");
+const InterfaceBrowser = require("./../interfaces/InterfaceBrowser");
 const puppeteer = require("puppeteer");
 
-class MapYandex extends InterfaceYandex {
+class MapYandex extends InterfaceBrowser {
   constructor(parameters) {
     const defaultParameters = Object.assign({}, parameters, {
       url: storage.get('maps').yandex

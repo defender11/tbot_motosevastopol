@@ -4,8 +4,8 @@ const moment = require('moment');
 const debug = require("../../../system/helper/debug");
 const botEvents = require("../../../system/events/botEvents");
 const axios = require("axios");
-const WeatherYandex = require('../../helper/weatherYandex');
-const MapYandex = require('../../helper/mapYandex');
+const FactoryWeather = require('../../helper/weather/factoryWeather');
+const MapYandex = require('../../helper/map/mapYandex');
 
 const notifications = {
   async execute(params) {
@@ -94,7 +94,7 @@ const notifications = {
         });
     }
 
-    const weather = new WeatherYandex();
+    const weather = FactoryWeather.create('gismeteo');
     const weatherNow = await weather.get('now');
 
     await botEvents.sendEvent('photo',
@@ -109,7 +109,7 @@ const notifications = {
       });
   },
 
-  async sixDayEventWeather({chatID}, withInfoMessage = false) {
+  async fewDayEventWeather({chatID}, withInfoMessage = false) {
     let text = '',
       options = {
         caption: text
@@ -125,8 +125,8 @@ const notifications = {
         });
     }
 
-    const weather = new WeatherYandex();
-    const weatherSixDays = await weather.get('sixDays');
+    const weather = FactoryWeather.create('gismeteo');
+    const weatherSixDays = await weather.get('fewDays');
 
     await botEvents.sendEvent('photo',
       {

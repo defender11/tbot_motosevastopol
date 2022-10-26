@@ -23,7 +23,8 @@
     "weather": "https://cloud.mail.ru/public/Xo6R/83mDNdzoT"
   },
   "weather": {
-    "yandex": "https://yandex.ru/pogoda/?lat=44.61649704&lon=33.52513123"
+    "yandex": "https://yandex.ru/pogoda/?lat=44.61649704&lon=33.52513123",
+    "gismeteo": "https://www.gismeteo.ru/weather-sevastopol-5003"
   },
   "maps": {
     "yandex": "https://yandex.ru/maps/959/sevastopol/?l=trf%2Ctrfe&ll=33.496600%2C44.577991&z=15.95"
@@ -105,7 +106,7 @@
         "command": "/cb_weather_sevastopol"
       },
       {
-        "command": "/cb_weather_sevastopol_six_days"
+        "command": "/cb_weather_sevastopol_few_days"
       }
     ]
   }

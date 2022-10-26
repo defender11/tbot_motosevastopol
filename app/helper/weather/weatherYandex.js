@@ -1,10 +1,10 @@
-const Storage = require('../../system/storage/storage.js');
+const Storage = require('../../../system/storage/storage.js');
 let storage = Storage.getInstance();
 
-const InterfaceYandex = require("./InterfaceYandex");
+const InterfaceBrowser = require("./../interfaces/InterfaceBrowser");
 const puppeteer = require("puppeteer");
 
-class WeatherYandex extends InterfaceYandex {
+class WeatherYandex extends InterfaceBrowser {
   constructor(parameters) {
     const defaultParameters = Object.assign({}, parameters, {
       url: storage.get('weather').yandex
@@ -32,7 +32,7 @@ class WeatherYandex extends InterfaceYandex {
     return dayNow;
   }
 
-  async sixDays() {
+  async fewDays() {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setViewport({width: this.width, height: this.height});

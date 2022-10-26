@@ -10,7 +10,7 @@ module.exports.execute = async function (bot, msg) {
         inline_keyboard: [
           [
             {text: 'Сегодня', callback_data: '/cb_weather_sevastopol'},
-            {text: '6 дней', callback_data: '/cb_weather_sevastopol_six_days'}
+            {text: '3 дня', callback_data: '/cb_weather_sevastopol_few_days'}
           ],
         ]
       })

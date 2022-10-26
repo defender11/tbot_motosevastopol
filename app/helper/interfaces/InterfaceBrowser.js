@@ -1,4 +1,4 @@
-class InterfaceYandex {
+class InterfaceBrowser {
   constructor(parameters) {
     this.width = parameters.width ?? 1280;
     this.height = parameters.height ?? 800;
@@ -10,4 +10,4 @@ class InterfaceYandex {
   }
 }
 
-module.exports = InterfaceYandex;
+module.exports = InterfaceBrowser;
