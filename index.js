@@ -4,6 +4,7 @@ var storage = Storage.getInstance();
 const Log = require('./system/helper/log');
 const events = require('./system/events');
 const Notification = require('./app/events/custom/Notification');
+const BanSystem = require('./app/events/custom/BanSystem');
 const debug = require('./system/helper/debug');
 const DB = require('./system/database/database');
 
@@ -25,6 +26,7 @@ const run = () => {
   Log.clearLog();
 
   Notification.init();
+  BanSystem.init();
 
   for (let event in events) {
 
