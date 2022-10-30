@@ -4,7 +4,7 @@ let storage = Storage.getInstance();
 const InterfaceBrowser = require("./../interfaces/InterfaceBrowser");
 const puppeteer = require("puppeteer");
 
-class WeatherYandex extends InterfaceBrowser {
+class WeatherGismeteo extends InterfaceBrowser {
   constructor(parameters) {
     const defaultParameters = Object.assign({}, parameters, {
       url: storage.get('weather').gismeteo
@@ -51,6 +51,10 @@ class WeatherYandex extends InterfaceBrowser {
 
     return days;
   }
+
+  name() {
+    return 'Gismeteo';
+  }
 }
 
-module.exports = WeatherYandex;
+module.exports = WeatherGismeteo;
