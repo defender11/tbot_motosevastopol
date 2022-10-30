@@ -51,6 +51,10 @@ class WeatherYandex extends InterfaceBrowser {
 
     return days;
   }
+
+  name() {
+    return 'Yandex';
+  }
 }
 
 module.exports = WeatherYandex;

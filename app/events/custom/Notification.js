@@ -94,7 +94,7 @@ const notifications = {
         });
     }
 
-    const weather = FactoryWeather.create('gismeteo');
+    const weather = FactoryWeather.create(storage.get('weather').current);
     const weatherNow = await weather.get('now');
 
     await botEvents.sendEvent('photo',
@@ -104,8 +104,8 @@ const notifications = {
         options: {}
       },
       {
-        message: 'Info Weather Day Yandex',
-        data: 'Info Weather Day Yandex',
+        message: `Info Weather Day ${weather.get('name')}`,
+        data: `Info Weather Day ${weather.get('name')}`,
       });
   },
 
@@ -125,7 +125,7 @@ const notifications = {
         });
     }
 
-    const weather = FactoryWeather.create('gismeteo');
+    const weather = FactoryWeather.create(storage.get('weather').current);
     const weatherSixDays = await weather.get('fewDays');
 
     await botEvents.sendEvent('photo',
@@ -135,8 +135,8 @@ const notifications = {
         options: {}
       },
       {
-        message: 'Info Weather Six Day Yandex',
-        data: 'Info Weather Six Day Yandex',
+        message: `Info Weather Six Day ${weather.get('name')}`,
+        data: `Info Weather Six Day ${weather.get('name')}`,
       });
   },
 
@@ -156,9 +156,9 @@ const notifications = {
         });
     }
 
-    const weather = new WeatherYandex();
+    const weather = FactoryWeather.create(storage.get('weather').current);
     const weatherNow = await weather.get('now');
-    const weatherSixDays = await weather.get('sixDays');
+    const weatherSixDays = await weather.get('fewDays');
 
     await botEvents.sendEvent('mediaGroup',
       {
@@ -170,8 +170,8 @@ const notifications = {
         options: {}
       },
       {
-        message: 'Info Weather Group Yandex',
-        data: 'Info Weather Group Yandex',
+        message: `Info Weather Group ${weather.get('name')}`,
+        data: `Info Weather Group ${weather.get('name')}`,
       });
   },
 
