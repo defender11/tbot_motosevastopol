@@ -218,12 +218,26 @@ const notifications = {
 
     await axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
       .then(async response => {
-        const sevstarCopyright = `\n✅Поиск основан на данных компании \n© 2003-${moment().year()} Севстар.`;
+        const sevstarCopyright = `
+=======================
 
-        let msg = "🕛 " + moment().format('LLLL') + "\n" +
-          '\n💡 Неполадок со светом не найдено.';
-        msg += "\n=======================";
-        msg += sevstarCopyright;
+✅Сформировано на данных компании
+© 2003-${moment().year()} Севстар.`;
+
+        let titleTime = "🕛 " + moment().add(3, 'hours').format('LLLL');
+
+        let msg = `
+${titleTime}
+
+💡 Неполадок со светом не найдено.
+
+${sevstarCopyright}`;
+
+        let titleHouseWithoutLight = `
+${titleTime}
+
+⚠ Дома без света
+=======================`;
 
         if (response.data !== '') {
 
@@ -256,9 +270,7 @@ const notifications = {
           }
 
           if (newList.length > 1) {
-            msg = "🕛 " + moment().format('LLLL');
-            msg += "\n⚠ Улицы без света";
-            msg += "\n=======================";
+            msg = titleHouseWithoutLight;
 
             await botEvents.sendEvent('message',
               {
@@ -291,8 +303,7 @@ const notifications = {
                 });
             }
 
-            msg = "\n=======================";
-            msg += sevstarCopyright;
+            msg = sevstarCopyright;
 
             botEvents.sendEvent('message',
               {
@@ -317,11 +328,8 @@ const notifications = {
             }
 
             if (list !== '') {
-              msg = "🕛 " + moment().format('LLLL');
-              msg += "\n⚠ Улицы без света";
-              msg += "\n=======================";
+              msg = titleHouseWithoutLight;
               msg += list;
-              msg += "\n=======================";
               msg += sevstarCopyright;
             }
 
