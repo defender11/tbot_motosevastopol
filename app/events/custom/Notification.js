@@ -218,9 +218,12 @@ const notifications = {
 
     await axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
       .then(async response => {
-        const sevstarCopyright = `\nПоиск основан на данных компании \n© 2003-${moment().year()} Севстар.`;
+        const sevstarCopyright = `\n✅Поиск основан на данных компании \n© 2003-${moment().year()} Севстар.`;
 
-        let msg = '💡 Неполадок со светом не найдено, ' + sevstarCopyright;
+        let msg = "🕛 " + moment().format('LLLL') + "\n" +
+          '\n💡 Неполадок со светом не найдено.';
+        msg += "\n=======================";
+        msg += sevstarCopyright;
 
         if (response.data !== '') {
 
@@ -253,7 +256,8 @@ const notifications = {
           }
 
           if (newList.length > 1) {
-            msg = "\n⚠ Улицы без света";
+            msg = "🕛 " + moment().format('LLLL');
+            msg += "\n⚠ Улицы без света";
             msg += "\n=======================";
 
             await botEvents.sendEvent('message',
@@ -313,7 +317,8 @@ const notifications = {
             }
 
             if (list !== '') {
-              msg = "\n⚠ Улицы без света";
+              msg = "🕛 " + moment().format('LLLL');
+              msg += "\n⚠ Улицы без света";
               msg += "\n=======================";
               msg += list;
               msg += "\n=======================";
