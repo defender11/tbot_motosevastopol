@@ -98,6 +98,10 @@
         "description": "Погода Севастополь"
       },
       {
+        "command": "/light_sevastopol",
+        "description": "Свет в Севастополе"
+      },
+      {
         "command": "/start",
         "description": "Приветствие"
       }

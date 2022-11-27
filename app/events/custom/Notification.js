@@ -208,6 +208,50 @@ const notifications = {
         message: 'Info Event Road Sevastopol Yandex Map',
         data: 'Info Event Road Sevastopol Yandex Map',
       });
+  },
+
+  async dayLightChecker({chatID}, withInfoMessage = false) {
+    let text = ``,
+      options = {
+        caption: text
+      };
+
+    axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
+      .then(response => {
+        const sevstarCopyright = `\nПоиск основан на данных компании © 2003-${moment().year()} Севстар.`;
+
+        let msg = '💡 Неполадок со светом не найдено, ' + sevstarCopyright;
+
+        if (response.data !== '') {
+
+          msg = "\n⚠ Улицы без света, " + sevstarCopyright;
+          msg += "\n=======================";
+
+          let housesLightString = response.data.replace(/sevstar_coverage_map.houses_states = /gm, '');
+          housesLightString = housesLightString.replace(/;/gm, '');
+          let housesLightJson = JSON.parse(housesLightString);
+
+          for (let street in housesLightJson) {
+            if (housesLightJson[street] === 1) {
+              msg += "\n⚡ " + street + "\n";
+            }
+          }
+        }
+
+        botEvents.sendEvent('message',
+          {
+            id: chatID,
+            data: msg,
+            options: options
+          },
+          {
+            message: 'dayLightChecker',
+            data: msg,
+          });
+      })
+      .catch(ex => {
+        console.error(ex);
+      });
   }
 }
 
