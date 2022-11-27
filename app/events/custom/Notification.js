@@ -216,38 +216,134 @@ const notifications = {
         caption: text
       };
 
-    axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
-      .then(response => {
-        const sevstarCopyright = `\nПоиск основан на данных компании © 2003-${moment().year()} Севстар.`;
+    await axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
+      .then(async response => {
+        const sevstarCopyright = `\nПоиск основан на данных компании \n© 2003-${moment().year()} Севстар.`;
 
         let msg = '💡 Неполадок со светом не найдено, ' + sevstarCopyright;
 
         if (response.data !== '') {
 
-          msg = "\n⚠ Улицы без света, " + sevstarCopyright;
-          msg += "\n=======================";
-
           let housesLightString = response.data.replace(/sevstar_coverage_map.houses_states = /gm, '');
           housesLightString = housesLightString.replace(/;/gm, '');
           let housesLightJson = JSON.parse(housesLightString);
 
+          let list = '',
+            startIndexMessage = 0,
+            limitMessage = 120,
+            partsCounts = 0,
+            findState = 1;
+
+          let newList = [[]];
           for (let street in housesLightJson) {
-            if (housesLightJson[street] === 1) {
-              msg += "\n⚡ " + street + "\n";
+            if (startIndexMessage >= limitMessage) {
+              ++partsCounts;
+              startIndexMessage = 0;
+              newList.push([]);
+            }
+
+            if (housesLightJson[street] === findState) {
+              newList[partsCounts].push({
+                street: street,
+                state: housesLightJson[street],
+              });
+
+              ++startIndexMessage;
             }
           }
-        }
 
-        botEvents.sendEvent('message',
-          {
-            id: chatID,
-            data: msg,
-            options: options
-          },
-          {
-            message: 'dayLightChecker',
-            data: msg,
-          });
+          if (newList.length > 1) {
+            msg = "\n⚠ Улицы без света";
+            msg += "\n=======================";
+
+            await botEvents.sendEvent('message',
+              {
+                id: chatID,
+                data: msg,
+                options: options
+              },
+              {
+                message: 'dayLightChecker',
+                data: msg,
+              });
+
+            for (let i = 0; i < newList.length; i++) {
+
+              list = '';
+
+              for (let j = 0; j < newList[i].length; j++) {
+                list += "\n ⚡ " + newList[i][j].street + "";
+              }
+
+              await botEvents.sendEvent('message',
+                {
+                  id: chatID,
+                  data: list,
+                  options: options
+                },
+                {
+                  message: 'dayLightChecker',
+                  data: list,
+                });
+            }
+
+            msg = "\n=======================";
+            msg += sevstarCopyright;
+
+            botEvents.sendEvent('message',
+              {
+                id: chatID,
+                data: msg,
+                options: options
+              },
+              {
+                message: 'dayLightChecker',
+                data: msg,
+              });
+
+
+          } else if (newList.length === 1) {
+
+            for (let i = 0; i < newList.length; i++) {
+              list = '';
+
+              for (let j = 0; j < newList[i].length; j++) {
+                list += "\n ⚡ " + newList[i][j].street + "";
+              }
+            }
+
+            if (list !== '') {
+              msg = "\n⚠ Улицы без света";
+              msg += "\n=======================";
+              msg += list;
+              msg += "\n=======================";
+              msg += sevstarCopyright;
+            }
+
+            botEvents.sendEvent('message',
+              {
+                id: chatID,
+                data: msg,
+                options: options
+              },
+              {
+                message: 'dayLightChecker',
+                data: msg,
+              });
+          } else {
+
+            botEvents.sendEvent('message',
+              {
+                id: chatID,
+                data: msg,
+                options: options
+              },
+              {
+                message: 'dayLightChecker',
+                data: msg,
+              });
+          }
+        }
       })
       .catch(ex => {
         console.error(ex);
