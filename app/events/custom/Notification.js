@@ -244,7 +244,7 @@ ${sevstarCopyright}`;
             limitMessage = 120,
             partsCounts = 0,
             housesCount = 0,
-            findState = 0;
+            findState = 1;
 
           let newList = [[]];
           for (let street in housesLightJson) {
