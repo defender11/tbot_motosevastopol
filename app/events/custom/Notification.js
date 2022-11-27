@@ -218,26 +218,20 @@ const notifications = {
 
     await axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
       .then(async response => {
-        const sevstarCopyright = `
-=======================
+        const sevstarCopyright =
+`=======================
 
 ✅Сформировано на данных компании
 © 2003-${moment().year()} Севстар.`;
 
-        let titleTime = "🕛 " + moment().add(3, 'hours').format('LLLL');
+        let titleTime = "⏰ " + moment().add(3, 'hours').format('LLLL');
 
         let msg = `
 ${titleTime}
 
-💡 Неполадок со светом не найдено.
+💡 Неполадок со светом не найдено. 👍
 
 ${sevstarCopyright}`;
-
-        let titleHouseWithoutLight = `
-${titleTime}
-
-⚠ Дома без света
-=======================`;
 
         if (response.data !== '') {
 
@@ -249,7 +243,8 @@ ${titleTime}
             startIndexMessage = 0,
             limitMessage = 120,
             partsCounts = 0,
-            findState = 1;
+            housesCount = 0,
+            findState = 0;
 
           let newList = [[]];
           for (let street in housesLightJson) {
@@ -265,12 +260,17 @@ ${titleTime}
                 state: housesLightJson[street],
               });
 
+              ++housesCount;
               ++startIndexMessage;
             }
           }
 
           if (newList.length > 1) {
-            msg = titleHouseWithoutLight;
+            msg = `
+${titleTime}
+
+⚠ Домов без света - ${housesCount} шт.
+=======================`;
 
             await botEvents.sendEvent('message',
               {
@@ -288,24 +288,32 @@ ${titleTime}
               list = '';
 
               for (let j = 0; j < newList[i].length; j++) {
-                list += "\n ⚡ " + newList[i][j].street + "";
+                list += (list!== ''? "\n" : '') + "⚡ " + newList[i][j].street;
               }
 
-              await botEvents.sendEvent('message',
-                {
-                  id: chatID,
-                  data: list,
-                  options: options
-                },
-                {
-                  message: 'dayLightChecker',
-                  data: list,
-                });
+              await new Promise((resolve, reject) => {
+                setTimeout(async function () {
+                  await botEvents.sendEvent('message',
+                    {
+                      id: chatID,
+                      data: list,
+                      options: options
+                    },
+                    {
+                      message: 'dayLightChecker',
+                      data: list,
+                    });
+                  resolve();
+                }, 500);
+              });
             }
 
-            msg = sevstarCopyright;
+            msg = `
+=======================
+🏠 Количество - ${housesCount} шт.
+${sevstarCopyright}`;
 
-            botEvents.sendEvent('message',
+            await botEvents.sendEvent('message',
               {
                 id: chatID,
                 data: msg,
@@ -317,23 +325,30 @@ ${titleTime}
               });
 
 
-          } else if (newList.length === 1) {
+          }
+          else if (newList.length === 1) {
 
             for (let i = 0; i < newList.length; i++) {
               list = '';
 
               for (let j = 0; j < newList[i].length; j++) {
-                list += "\n ⚡ " + newList[i][j].street + "";
+                list += (list!== ''? "\n" : '') + "⚡ " + newList[i][j].street;
               }
             }
 
             if (list !== '') {
-              msg = titleHouseWithoutLight;
-              msg += list;
-              msg += sevstarCopyright;
+              msg = `
+${titleTime}
+
+⚠ Домов без света - ${housesCount} шт.
+=======================
+${list}
+=======================
+🏠 Количество - ${housesCount} шт.
+${sevstarCopyright}`;
             }
 
-            botEvents.sendEvent('message',
+            await botEvents.sendEvent('message',
               {
                 id: chatID,
                 data: msg,
@@ -345,7 +360,7 @@ ${titleTime}
               });
           } else {
 
-            botEvents.sendEvent('message',
+            await botEvents.sendEvent('message',
               {
                 id: chatID,
                 data: msg,
