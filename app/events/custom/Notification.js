@@ -6,6 +6,7 @@ const botEvents = require("../../../system/events/botEvents");
 const axios = require("axios");
 const FactoryWeather = require('../../helper/weather/factoryWeather');
 const MapYandex = require('../../helper/map/mapYandex');
+const LightHouseChecker = require('../../helper/lightHouse/LightHouseChecker');
 
 const notifications = {
   async execute(params) {
@@ -211,171 +212,10 @@ const notifications = {
   },
 
   async dayLightChecker({chatID}, withInfoMessage = false) {
-    let text = ``,
-      options = {
-        caption: text
-      };
-
-    await axios.get('https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js')
-      .then(async response => {
-        const sevstarCopyright =
-`=======================
-
-✅Сформировано на данных компании
-© 2003-${moment().year()} Севстар.`;
-
-        let titleTime = "⏰ " + moment().add(3, 'hours').format('LLLL');
-
-        let msg = `
-${titleTime}
-
-💡 Неполадок со светом не найдено. 👍
-
-${sevstarCopyright}`;
-
-        if (response.data !== '') {
-
-          let housesLightString = response.data.replace(/sevstar_coverage_map.houses_states = /gm, '');
-          housesLightString = housesLightString.replace(/;/gm, '');
-          let housesLightJson = JSON.parse(housesLightString);
-
-          let list = '',
-            startIndexMessage = 0,
-            limitMessage = 120,
-            partsCounts = 0,
-            housesCount = 0,
-            findState = 1;
-
-          let newList = [[]];
-          for (let street in housesLightJson) {
-            if (startIndexMessage >= limitMessage) {
-              ++partsCounts;
-              startIndexMessage = 0;
-              newList.push([]);
-            }
-
-            if (housesLightJson[street] === findState) {
-              newList[partsCounts].push({
-                street: street,
-                state: housesLightJson[street],
-              });
-
-              ++housesCount;
-              ++startIndexMessage;
-            }
-          }
-
-          if (newList.length > 1) {
-            msg = `
-${titleTime}
-
-⚠ Домов без света - ${housesCount} шт.
-=======================`;
-
-            await botEvents.sendEvent('message',
-              {
-                id: chatID,
-                data: msg,
-                options: options
-              },
-              {
-                message: 'dayLightChecker',
-                data: msg,
-              });
-
-            for (let i = 0; i < newList.length; i++) {
-
-              list = '';
-
-              for (let j = 0; j < newList[i].length; j++) {
-                list += (list!== ''? "\n" : '') + "⚡ " + newList[i][j].street;
-              }
-
-              await new Promise((resolve, reject) => {
-                setTimeout(async function () {
-                  await botEvents.sendEvent('message',
-                    {
-                      id: chatID,
-                      data: list,
-                      options: options
-                    },
-                    {
-                      message: 'dayLightChecker',
-                      data: list,
-                    });
-                  resolve();
-                }, 500);
-              });
-            }
-
-            msg = `
-=======================
-🏠 Количество - ${housesCount} шт.
-${sevstarCopyright}`;
-
-            await botEvents.sendEvent('message',
-              {
-                id: chatID,
-                data: msg,
-                options: options
-              },
-              {
-                message: 'dayLightChecker',
-                data: msg,
-              });
-
-
-          }
-          else if (newList.length === 1) {
-
-            for (let i = 0; i < newList.length; i++) {
-              list = '';
-
-              for (let j = 0; j < newList[i].length; j++) {
-                list += (list!== ''? "\n" : '') + "⚡ " + newList[i][j].street;
-              }
-            }
-
-            if (list !== '') {
-              msg = `
-${titleTime}
-
-⚠ Домов без света - ${housesCount} шт.
-=======================
-${list}
-=======================
-🏠 Количество - ${housesCount} шт.
-${sevstarCopyright}`;
-            }
-
-            await botEvents.sendEvent('message',
-              {
-                id: chatID,
-                data: msg,
-                options: options
-              },
-              {
-                message: 'dayLightChecker',
-                data: msg,
-              });
-          } else {
-
-            await botEvents.sendEvent('message',
-              {
-                id: chatID,
-                data: msg,
-                options: options
-              },
-              {
-                message: 'dayLightChecker',
-                data: msg,
-              });
-          }
-        }
-      })
-      .catch(ex => {
-        console.error(ex);
-      });
+    await new LightHouseChecker({
+      chatID,
+      url: 'https://sevstar.net/wp-content/themes/SevStar-Theme-2/js/map/houses.js',
+    }).check();
   }
 }
 
