@@ -1,5 +1,7 @@
 const moment = require("moment/moment");
 const {LightHouse, sourceMessages} = require('./LightHouse');
+const Storage = require('../../../system/storage/storage.js');
+let storage = Storage.getInstance();
 
 const Messages = {
   getCopyRight() {
@@ -100,7 +102,23 @@ class LightHouseSevstar extends LightHouse {
 
           message += self.Messages.getCopyRight();
 
-          await self.send(message);
+          storage.set('LightHouseSevstar', newList);
+
+          await self.send(message, {
+            reply_markup: JSON.stringify({
+              inline_keyboard: [
+                [
+                  {text: 'Поиск адресов в Новостях СевЭнергоСбыт', callback_data: '/cb_find_sevenergosbit_news_about_light_house'},
+                ],
+                [
+                  {text: 'Телефоны СевЭнергоСбыт', callback_data: '/cb_show_contacts_sevenergosbit'},
+                ],
+                [
+                  {text: 'Дома на карте', callback_data: '/cb_show_light_house_on_the_map'},
+                ]
+              ]
+            })
+          });
 
         } else {
 
