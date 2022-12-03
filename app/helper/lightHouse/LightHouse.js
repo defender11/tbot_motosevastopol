@@ -8,7 +8,7 @@ const Messages = {
   },
 
   getTitleHousesCount(count = 0) {
-    let str ='⚠ Домов без света - ' + this.getCount(count) + "\n";
+    let str = '⚠ Домов без света - ' + this.getCount(count) + "\n";
     str += this.getDevideLine();
 
     return str;
@@ -66,12 +66,12 @@ class LightHouse {
       });
   }
 
-  async send(data) {
+  async send(data, options = {}) {
     await botEvents.sendEvent('message',
       {
         id: this.chatID,
         data: data,
-        options: {}
+        options: options,
       },
       {
         message: 'dayLightChecker',

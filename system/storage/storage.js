@@ -54,10 +54,10 @@ const Storage = (function () {
       return key !== '' ? data[key] : data;
     }
 
-    set(key, value = '', asNewRow = false, newRowID = false) {
+    set(key, value = '', asNewRow = false, newRowID = false, newRowIDKey = '') {
       if (asNewRow) {
         if (newRowID) {
-          data[key][newRowID] = value;
+          data[key][newRowIDKey] = value;
         } else {
           data[key].push(value);
         }
