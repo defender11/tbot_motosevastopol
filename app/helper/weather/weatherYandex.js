@@ -18,12 +18,28 @@ class WeatherYandex extends InterfaceBrowser {
     const page = await browser.newPage();
     await page.setViewport({width: this.width, height: this.height});
     await page.goto(this.url);
+
+    await page.waitForSelector('.content__top');
+
+    const offset = await page.evaluate(async () => {
+      let contentTop = document.querySelector('.content__top > .fact');
+      let data = contentTop.getBoundingClientRect();
+
+      return {
+        height: data.height,
+        left: data.left,
+        right: data.right,
+        top: data.top,
+        width: data.width,
+      };
+    });
+
     const dayNow = await page.screenshot({
       clip: {
-        x: 25,
-        y: 110,
-        width: 600,
-        height: 280,
+        x: offset.left,
+        y: offset.top,
+        width: offset.width,
+        height: offset.height,
       },
     });
 
@@ -38,12 +54,27 @@ class WeatherYandex extends InterfaceBrowser {
     await page.setViewport({width: this.width, height: this.height});
     await page.goto(this.url);
 
+    await page.waitForSelector('.forecast-briefly');
+
+    const offset = await page.evaluate(async () => {
+      let contentTop = document.querySelector('.forecast-briefly');
+      let data = contentTop.getBoundingClientRect();
+
+      return {
+        height: data.height,
+        left: data.left,
+        right: data.right,
+        top: data.top,
+        width: data.width,
+      };
+    });
+
     const days = await page.screenshot({
       clip: {
-        x: 135,
-        y: 540,
-        width: 635,
-        height: 200,
+        x: offset.left,
+        y: offset.top,
+        width: offset.width,
+        height: offset.height,
       },
     });
 

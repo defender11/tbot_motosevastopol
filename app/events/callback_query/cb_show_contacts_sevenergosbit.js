@@ -1,25 +1,66 @@
+const Storage = require('../../../system/storage/storage.js');
+let storage = Storage.getInstance();
+const botEvents = require("../../../system/events/botEvents");
 const puppeteer = require("puppeteer");
 
 module.exports.execute = async function (bot, msg) {
-  console.log('cb_show_contacts_sevenergosbit');
 
+  let options = {};
 
-  // const browser = await puppeteer.launch();
-  // const page = await browser.newPage();
-  // await page.setViewport({width: this.width, height: this.height});
-  // await page.goto(this.url + '/3-days/');
-  //
-  // const days = await page.screenshot({
-  //   clip: {
-  //     x: 0,
-  //     y: 310,
-  //     width: 670,
-  //     height: 385,
-  //   },
-  // });
-  //
-  // await browser.close();
+  await botEvents.sendEvent('message',
+    {
+      id: msg.message.chat.id,
+      data: 'Получаем данные, подождите...',
+      options: options
+    },
+    {
+      message: 'sevenergosbit_contact',
+      data: msg,
+    });
 
+  let width = 1280;
+  let height = 800;
+  let url = 'https://sevenergosbyt.ru/?page_id=31';
 
-  // await Notification.notifications.dayEventWeather({chatID: msg.message.chat.id}, true);
+  const browser = await puppeteer.launch({
+    headless: true,
+    slowMo: 100,
+    devtools: true
+  });
+  const page = await browser.newPage();
+  await page.setViewport({width, height});
+  await page.goto(url);
+  await page.waitForSelector('.site-main--contacts');
+
+  const contacts = await page.evaluate(async () => {
+    let $data = $('.site-main--contacts > .s-contact-wrap[data-address=""]');
+    return {
+      title: $data.context.title,
+      text: $data[0].outerText,
+    }
+  });
+
+  await browser.close();
+
+  contacts.url = url;
+
+  let text = `
+${contacts.url}
+-----------------
+${contacts.title}
+${contacts.text}
+`;
+
+  msg['_' + storage.get('botName') + '_sevenergosbit_contact'] = contacts;
+
+  return await botEvents.sendEvent('message',
+    {
+      id: msg.message.chat.id,
+      data: text,
+      options: options
+    },
+    {
+      message: 'sevenergosbit_contact',
+      data: msg,
+    });
 }

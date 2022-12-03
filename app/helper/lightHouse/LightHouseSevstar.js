@@ -111,10 +111,10 @@ class LightHouseSevstar extends LightHouse {
                   {text: 'Поиск адресов в Новостях СевЭнергоСбыт', callback_data: '/cb_find_sevenergosbit_news_about_light_house'},
                 ],
                 [
-                  {text: 'Телефоны СевЭнергоСбыт', callback_data: '/cb_show_contacts_sevenergosbit'},
+                  {text: 'Дома на карте', callback_data: '/cb_show_light_house_on_the_map'},
                 ],
                 [
-                  {text: 'Дома на карте', callback_data: '/cb_show_light_house_on_the_map'},
+                  {text: 'Контакты СевЭнергоСбыт', callback_data: '/cb_show_contacts_sevenergosbit'},
                 ]
               ]
             })
